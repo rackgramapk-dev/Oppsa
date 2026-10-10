@@ -24,7 +24,7 @@ public class MainActivity extends BridgeActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         // user left the app while the phone is unlocked -> go back to normal behaviour
         KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
