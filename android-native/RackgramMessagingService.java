@@ -172,7 +172,7 @@ public class RackgramMessagingService extends FirebaseMessagingService {
                 ch.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE),
                         new AudioAttributes.Builder()
                                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIC).build());
                 nm.createNotificationChannel(ch);
             }
         }

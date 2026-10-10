@@ -73,6 +73,15 @@ jobs:
           PY
           cat android/app/src/main/res/values/styles.xml
       - run: npx cap sync android
+      - name: Harden Android build (not debuggable, no adb backup)
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          G=android/app/build.gradle
+          sed -i 's/android:allowBackup="true"/android:allowBackup="false"/' "$M"
+          grep -q 'android:allowBackup' "$M" || sed -i 's#<application#<application android:allowBackup="false"#' "$M"
+          grep -q 'debuggable' "$G" || sed -i '/buildTypes {/a\        debug {\n            debuggable false\n        }' "$G"
+          grep -n 'allowBackup' "$M"
+          grep -n -B1 -A6 'buildTypes' "$G"
       - name: Build debug APK
         run: |
           cd android

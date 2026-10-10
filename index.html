@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: wss: blob: data:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Rackgram</title>
 <style>
 :root{--bg:#fff;--fg:#18181b;--mut:#71717a;--line:#e4e4e7;--pri:#52525B;--on:#fff;--card:#f4f4f5;--err:#dc2626;--ok:#16a34a;
@@ -417,7 +418,7 @@ function lsText(id){if(TYP[id])return"typing...";if(ONLINE.has(id))return"online
 function paintPresence(){document.querySelectorAll(".pd[data-id]").forEach(e=>e.classList.toggle("on",ONLINE.has(e.dataset.id)));document.querySelectorAll("[data-ls]").forEach(e=>{e.textContent=lsText(e.dataset.ls);e.classList.toggle("on",ONLINE.has(e.dataset.ls))})}
 function tickHtml(x){return `<svg class="tk${x.rd?" rd":""}" viewBox="0 0 16 11">${x.d?'<path d="M1 6l3.5 3.5L11 1.5"/><path d="M6 9.5l8.5-8"/>':'<path d="M3 6l3.5 3.5L13 1.5"/>'}</svg>`}
 const AVP=SB_URL+"/storage/v1/object/public/avatars/";
-const avatar=(k,n,id)=>{const u=id&&PEOPLE[id]&&PEOPLE[id].av;return k==="acc"?(u&&u.startsWith(AVP)?`<div class="ava${srC(id)}" style="background:url('${esc(u)}') center/cover">${dot(id)}</div>`:`<div class="ava${srC(id)}">${esc(n[0])}${dot(id)}</div>`):(id&&GRP[id]&&GRP[id].av&&GRP[id].av.startsWith(AVP)?`<div class="ava a2 ${k==="cha"?"ch":""}" style="background:url('${esc(GRP[id].av)}') center/cover"></div>`:`<div class="ava a2 ${k==="cha"?"ch":""}">${ICON[k]}</div>`)};//`<div class="ava a2 ${k==="cha"?"ch":""}">${ICON[k]}</div>`;
+const avatar=(k,n,id)=>{const u=id&&PEOPLE[id]&&PEOPLE[id].av;return k==="acc"?(u&&u.startsWith(AVP)?`<div class="ava${srC(id)}" style="background:url('${esc(u).replace(/'/g,"%27")}') center/cover">${dot(id)}</div>`:`<div class="ava${srC(id)}">${esc(n[0])}${dot(id)}</div>`):(id&&GRP[id]&&GRP[id].av&&GRP[id].av.startsWith(AVP)?`<div class="ava a2 ${k==="cha"?"ch":""}" style="background:url('${esc(GRP[id].av).replace(/'/g,"%27")}') center/cover"></div>`:`<div class="ava a2 ${k==="cha"?"ch":""}">${ICON[k]}</div>`)};//`<div class="ava a2 ${k==="cha"?"ch":""}">${ICON[k]}</div>`;
 
 let tab="all",cur2="cht";
 const pane=$("pane");
@@ -582,7 +583,7 @@ const unsheet=()=>$("sheet").classList.add("hide");
 $("sheet").onclick=e=>{if(e.target.dataset.x)unsheet()};
 function cnt(d){const n=d.mem.length+1;d.m=n+(d.k==="cha"?" subscriber":" member")+(n>1?"s":"")}
 function addSheet(d){const L=DATA.filter(x=>x.k==="acc"&&!d.mem.some(m=>m.n===x.n));
- sheet("<h3>Add member</h3>"+(L.length?L.map(x=>`<button class="rowb sp" data-p="${esc(x.n)}"><span>${esc(x.n)}</span><span class="s">@${x.u}</span></button>`).join(""):'<div class="empty">Everyone has been added</div>'));
+ sheet("<h3>Add member</h3>"+(L.length?L.map(x=>`<button class="rowb sp" data-p="${esc(x.n)}"><span>${esc(x.n)}</span><span class="s">@${esc(String(x.u||""))}</span></button>`).join(""):'<div class="empty">Everyone has been added</div>'));
  $("sheet").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{d.mem.push({n:b.dataset.p,r:"m",p:{}});cnt(d);sv_();unsheet();showProf(d.n);toast("Member added")})}
 const PERMS=[["info","Change info (name, photo)"],["post","Post messages"],["del","Delete messages"],["add","Add members"],["ban","Remove / ban members"],["pin","Pin messages"],["link","Manage invite link"],["adm","Add new admins (only within own rights)"]];
 function memSheet(d,n){const m=d.mem.find(x=>x.n===n);if(!m)return;
